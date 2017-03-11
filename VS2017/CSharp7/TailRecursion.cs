@@ -13,7 +13,9 @@ namespace CSharp7
             {
                 var recursionResult = func();
                 if (recursionResult.IsFinalResult)
+                {
                     return recursionResult.Result;
+                }
                 func = recursionResult.NextStep;
             } while (true);
         }
@@ -32,6 +34,7 @@ namespace CSharp7
 
     public class RecursionResult<T>
     {
+        public static long counter = 0;
         private readonly bool _isFinalResult;
         private readonly T _result;
         private readonly Func<RecursionResult<T>> _nextStep;
@@ -40,6 +43,7 @@ namespace CSharp7
             _isFinalResult = isFinalResult;
             _result = result;
             _nextStep = nextStep;
+            counter++;
         }
 
         public bool IsFinalResult { get { return _isFinalResult; } }

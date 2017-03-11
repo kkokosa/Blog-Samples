@@ -7,4 +7,8 @@
     <RootNamespace>CSharp7</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.10.3" />
+  </ItemGroup>
+
 </Project>
