@@ -41,9 +41,14 @@ namespace CSharp7
 
         RecursionResult<ulong> Factorial(int n, ulong product)
         {
+            RecursionResult<ulong> Inner()
+            {
+                return Factorial(n - 1, (ulong)n * product);
+            }
+
             if (n < 2)
                 return TailRecursion.Return(product);
-            return TailRecursion.Next(() => Factorial(n - 1, (ulong)n * product));
+            return TailRecursion.Next(Inner);
         }
 
         RecursionResult_Approach1<ulong> FactorialApproach1(int n, ulong product, RecursionResult_Approach1<ulong> state)
