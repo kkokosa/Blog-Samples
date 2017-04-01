@@ -76,7 +76,8 @@ namespace Classic_ConsoleApp_WithoutETW
                 var result = ProcessSomething();
                 if (result > 0)
                 {
-                    Log.Debug("Pies1 {result}", result);
+                    var debugData = new { Result = result, IsHappy = true };
+                    Log.Debug("Pies1 {@data}", debugData);
                     ProcessMore();
                     Log.Debug("Pies2");
                     ProcessWithException(result);
@@ -86,7 +87,7 @@ namespace Classic_ConsoleApp_WithoutETW
             }
             catch (Exception ex)
             {
-                Log.Error($"Ojojoj... {ex.Message}");
+                Log.Error(ex, "Ojojoj...");
             }
             Log.CloseAndFlush();
         }
@@ -105,6 +106,5 @@ namespace Classic_ConsoleApp_WithoutETW
         {
             throw new ArgumentOutOfRangeException("result", result, "Not supported value");
         }
-
     }
 }
