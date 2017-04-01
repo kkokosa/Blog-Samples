@@ -17,27 +17,48 @@ namespace Classic_Console_AdvancedProvider
             {
                 Console.WriteLine("Enter command:");
                 string command = Console.ReadLine();
-                MySampleEventAdvancedProvider.Log.CommandEntered(index, command);
-                Thread.Sleep(1000);
-                MySampleEventAdvancedProvider.Log.CommandProcessed(index, "Succeeded");
+                MySampleEventAdvancedProvider.Log.CommandStart(index, command);
+                ProcessCommand(index, command);
+                MySampleEventAdvancedProvider.Log.CommandStop(index, "Succeeded");
                 index++;
             }
         }
+
+        private static void ProcessCommand(long commandId, string command)
+        {
+            Parallel.For(0, 100, index =>
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    Thread.Sleep(100);
+                    MySampleEventAdvancedProvider.Log.CommandProcessing(
+                        commandId,
+                        $"Command {command} processing step {i}");
+                }
+            });
+            
+        }
     }
 
-    [EventSource(Name = "MySampleEventAdvancedProvider-General")]
+    [EventSource(Name = "4Developers-MySampleEventAdvancedProvider-General")]
     sealed class MySampleEventAdvancedProvider : EventSource
     {
         [Event(1, Keywords = Keywords.Commands)]
-        public void CommandEntered(long commandId, string Name)
+        public void CommandStart(long commandId, string Name)
         {
             WriteEvent(1, commandId, Name);
         }
 
         [Event(2, Keywords = Keywords.Commands)]
-        public void CommandProcessed(long commandId, string Result)
+        public void CommandStop(long commandId, string Result)
         {
             WriteEvent(2, commandId, Result);
+        }
+
+        [Event(3, Keywords = Keywords.Debug)]
+        public void CommandProcessing(long commandId, string Message)
+        {
+            WriteEvent(3, commandId, Message);
         }
 
         public class Keywords
